@@ -35,6 +35,12 @@ namespace Diamond {
 		Transform2i(Vector2i position, float rotation) : position(position), size(1, 1), rotation(rotation) {}
 		
 		Transform2i(Vector2i position, Vector2i size, float rotation) : position(position), size(size), rotation(rotation) {}
+
+		void reset() {
+			position.set(0, 0);
+			size.set(0, 0);
+			rotation = 0;
+		}
 	};
 }
 
