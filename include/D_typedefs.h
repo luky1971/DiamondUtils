@@ -20,6 +20,7 @@
 #include <stdint.h>
 
 // time typedefs
+typedef uint32_t tD_time; // time type
 typedef int16_t tD_delta; // delta time type
 
 // ID/index typedefs
