@@ -14,37 +14,30 @@
 	limitations under the License.
 */
 
-#ifndef D_VECTOR_2I_H
-#define D_VECTOR_2I_H
+#ifndef D_TRANSFORM_2_H
+#define D_TRANSFORM_2_H
+
+#include "D_Vector2.h"
 
 namespace Diamond {
-	class Vector2i {
+	template <class PTYPE, class RTYPE>
+	class Transform2 {
 		public:
-		int x, y;
-
-		Vector2i() : x(0), y(0) {}
+		Vector2<PTYPE> position;
+		RTYPE rotation;
 		
-		Vector2i(int x, int y) : x(x), y(y) {}
-
-		inline void set(int x, int y) {
-			this->x = x, this->y = y;
-		}
-
-		inline Vector2i &add(Vector2i b) {
-			x += b.x, y += b.y;
-			return *this;
-		}
+		Transform2() {}
 		
-		inline Vector2i &sub(Vector2i b) {
-			x -= b.x, y -= b.y;
-			return *this;
-		}
+		Transform2(Vector2<PTYPE> position) : position(position) {}
 		
-		inline Vector2i &scalar(int scalar) {
-			x *= scalar, y *= scalar;
-			return *this;
+		Transform2(Vector2<PTYPE> position, RTYPE rotation) : position(position), rotation(rotation) {}
+
+
+		void reset() {
+			position = Vector2<PTYPE>();
+			rotation = RTYPE();
 		}
 	};
 }
 
-#endif // D_VECTOR_2I_H
+#endif // D_TRANSFORM_2_H
