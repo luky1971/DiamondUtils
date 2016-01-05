@@ -23,7 +23,7 @@ namespace Diamond {
 		public:
 		T x, y;
 
-		Vector2() {}
+		Vector2() : x(), y() {}
 		
 		Vector2(T x, T y) : x(x), y(y) {}
 
