@@ -32,14 +32,14 @@ namespace Diamond {
         T &at(tD_id id) { return objects.at(id_index_map.at(id)); }
         const T &at(tD_id id) const { return objects.at(id_index_map.at(id)); }
 
-        std::vector<T>::iterator begin() { return objects.begin(); }
-        std::vector<T>::iterator end() { return objects.end(); }
+        typename std::vector<T>::iterator begin() { return objects.begin(); }
+        typename std::vector<T>::iterator end() { return objects.end(); }
         
-        std::vector<T>::const_iterator begin() const { return objects.begin(); }
-        std::vector<T>::const_iterator end() const { return objects.end(); }
+        typename std::vector<T>::const_iterator begin() const { return objects.begin(); }
+        typename std::vector<T>::const_iterator end() const { return objects.end(); }
 
-        std::vector<T>::const_iterator cbegin() const { return objects.cbegin(); }
-        std::vector<T>::const_iterator cend() const { return objects.cend(); }
+        typename std::vector<T>::const_iterator cbegin() const { return objects.cbegin(); }
+        typename std::vector<T>::const_iterator cend() const { return objects.cend(); }
 
 
         /**
