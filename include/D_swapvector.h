@@ -24,49 +24,22 @@ namespace Diamond {
     template <class T>
     class swapvector {
     public:
-        T &operator[](tD_id id) {
-            return objects[id_index_map[id]];
-        }
+        // Access and iterator functions
 
-        const T &operator[](tD_id id) const {
-            return objects[id_index_map[id]];
-        }
+        T &operator[](tD_id id) { return objects[id_index_map[id]]; }
+        const T &operator[](tD_id id) const { return objects[id_index_map[id]]; }
 
+        T &at(tD_id id) { return objects.at(id_index_map.at(id)); }
+        const T &at(tD_id id) const { return objects.at(id_index_map.at(id)); }
 
-        T &at(tD_id id) {
-            return objects.at(id_index_map.at(id));
-        }
-
-        const T &at(tD_id id) const {
-            return objects.at(id_index_map.at(id));
-        }
-
-
-        std::vector<T>::iterator begin() {
-            return objects.begin();
-        }
-
-        std::vector<T>::iterator end() {
-            return objects.end();
-        }
-
+        std::vector<T>::iterator begin() { return objects.begin(); }
+        std::vector<T>::iterator end() { return objects.end(); }
         
-        std::vector<T>::const_iterator begin() const {
-            return objects.begin();
-        }
+        std::vector<T>::const_iterator begin() const { return objects.begin(); }
+        std::vector<T>::const_iterator end() const { return objects.end(); }
 
-        std::vector<T>::const_iterator end() const {
-            return objects.end();
-        }
-
-
-        std::vector<T>::const_iterator cbegin() const {
-            return objects.cbegin();
-        }
-
-        std::vector<T>::const_iterator cend() const {
-            return objects.cend();
-        }
+        std::vector<T>::const_iterator cbegin() const { return objects.cbegin(); }
+        std::vector<T>::const_iterator cend() const { return objects.cend(); }
 
 
         /**
