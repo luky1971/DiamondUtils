@@ -22,8 +22,8 @@
 
 namespace Diamond {
 	/**
-	 A contiguous vector data structure with O(1) insertion and deletion at any point.
-	 Access is O(1) but with higher constant factor than a std::vector.
+	 A contiguous vector data structure with O(1) deletion at any point.
+	 Access is O(1) but with higher constant factor than std::vector.
 	 Does not maintain order of elements, and uses O(n) auxiliary space.
 	*/
     template <class T>
@@ -49,7 +49,7 @@ namespace Diamond {
 
         /**
          Constructs an object and adds it to the collection. 
-         Returns an id that can be used to get() the emplaced object.
+         Returns an id that can be used to access the emplaced object using [] or at().
         */
         template <typename... Args>
         tD_id emplace_back(Args&&... args) {
@@ -71,6 +71,28 @@ namespace Diamond {
             return new_id;
         }
 
+        /**
+         Adds an object to the collection.
+         Returns an id that can be used to access the new object using [] or at().
+        */
+        tD_id push_back(const T &obj) {
+            tD_id new_id;
+
+            if (!free_id_stack.empty()) {
+                new_id = free_id_stack.back();
+                free_id_stack.pop_back();
+                id_index_map[new_id] = objects.size();
+            }
+            else {
+                new_id = id_index_map.size();
+                id_index_map.push_back(objects.size());
+            }
+
+            objects.push_back(obj);
+            index_id_map.push_back(new_id);
+
+            return new_id;
+        }
 
         /**
          Removes the object corresponding to the given id.
@@ -94,7 +116,6 @@ namespace Diamond {
         tD_index size() {
             return objects.size();
         }
-
 
         std::vector<T> &data() {
             return objects;
