@@ -23,7 +23,7 @@
 namespace Diamond {
     template <typename T>
     class Vector2 {
-        public:
+    public:
         T x, y;
 
         Vector2() : x(), y() {}

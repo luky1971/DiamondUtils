@@ -19,15 +19,15 @@
 
 using namespace Diamond;
 
-TEST(MatrixTest, Mul1by1) {
+TEST(MatrixMathTest, Mul1by1) {
     int m1[1][1] = { {2} };
     int m2[1][1] = { {3} };
     int out[1][1] = {0};
-    Matrix::mul<int, 1, 1, 1>(m1, m2, out);
+    MatrixMath::mul<int, 1, 1, 1>(m1, m2, out);
     EXPECT_EQ(out[0][0], 6);
 }
 
-TEST(MatrixTest, Mul2by2) {
+TEST(MatrixMathTest, Mul2by2) {
     int m1[2][2] = {
         {2, 4},
         {-3, 6}
@@ -37,14 +37,14 @@ TEST(MatrixTest, Mul2by2) {
         {7, 3}
     };
     int out[2][2] = {0};
-    Matrix::mul<int, 2, 2, 2>(m1, m2, out);
+    MatrixMath::mul<int, 2, 2, 2>(m1, m2, out);
     EXPECT_EQ(out[0][0], 46);
     EXPECT_EQ(out[0][1], 4);
     EXPECT_EQ(out[1][0], 15);
     EXPECT_EQ(out[1][1], 30);
 }
 
-TEST(MatrixTest, Mul1by2and2by2) {
+TEST(MatrixMathTest, Mul1by2and2by2) {
     int m1[1][2] = {
         {6, 7}
     };
@@ -53,12 +53,12 @@ TEST(MatrixTest, Mul1by2and2by2) {
         {4, 9}
     };
     int out[1][2] = {0};
-    Matrix::mul<int, 1, 2, 2>(m1, m2, out);
+    MatrixMath::mul<int, 1, 2, 2>(m1, m2, out);
     EXPECT_EQ(out[0][0], 64);
     EXPECT_EQ(out[0][1], 33);
 }
 
-TEST(MatrixTest, Mul1by3and3by3) {
+TEST(MatrixMathTest, Mul1by3and3by3) {
     int m1[1][3] = {
         {-9, 1, 14}
     };
@@ -68,13 +68,13 @@ TEST(MatrixTest, Mul1by3and3by3) {
         {4, 9, -1}
     };
     int out[1][3] = {0};
-    Matrix::mul<int, 1, 3, 3>(m1, m2, out);
+    MatrixMath::mul<int, 1, 3, 3>(m1, m2, out);
     EXPECT_EQ(out[0][0], 47);
     EXPECT_EQ(out[0][1], 117);
     EXPECT_EQ(out[0][2], -66);
 }
 
-TEST(MatrixTest, Mul3by3) {
+TEST(MatrixMathTest, Mul3by3) {
     int m1[3][3] = {
         {-92, 8, -100},
         {-32, 78, -25},
@@ -86,7 +86,7 @@ TEST(MatrixTest, Mul3by3) {
         {-15, -58, 55}
     };
     int out[3][3] = {0};
-    Matrix::mul<int, 3, 3, 3>(m1, m2, out);
+    MatrixMath::mul<int, 3, 3, 3>(m1, m2, out);
     EXPECT_EQ(out[0][0], -3348);
     EXPECT_EQ(out[0][1], 488);
     EXPECT_EQ(out[0][2], 1332);
@@ -96,4 +96,136 @@ TEST(MatrixTest, Mul3by3) {
     EXPECT_EQ(out[2][0], 2002);
     EXPECT_EQ(out[2][1], 1858);
     EXPECT_EQ(out[2][2], -2368);
+}
+
+TEST(MatrixTest, BracketOperates) {
+    Matrix<int, 2, 2> m;
+    m[0][0] = 4;
+    m[0][1] = 2;
+    m[1][0] = 1;
+    m[1][1] = 3;
+    EXPECT_EQ(m[0][0], 4);
+    EXPECT_EQ(m[0][1], 2);
+    EXPECT_EQ(m[1][0], 1);
+    EXPECT_EQ(m[1][1], 3);
+}
+
+TEST(MatrixTest, Constructs) {
+    Matrix<int, 2, 2> m = {
+        {
+            {4, 9},
+            {-6, 3}
+        }
+    };
+    EXPECT_EQ(m[0][0], 4);
+    EXPECT_EQ(m[0][1], 9);
+    EXPECT_EQ(m[1][0], -6);
+    EXPECT_EQ(m[1][1], 3);
+
+    Matrix<int, 2, 2> m2 = {0};
+    EXPECT_EQ(m2[0][0], 0);
+    EXPECT_EQ(m2[0][1], 0);
+    EXPECT_EQ(m2[1][0], 0);
+    EXPECT_EQ(m2[1][1], 0);
+}
+
+
+TEST(MatrixTest, AddsSubtracts) {
+    Matrix<int, 3, 3> m1 = {
+        {
+            {2, -9, 14},
+            {4, 9, -6},
+            {0, 2, 1}
+        }
+    };
+
+    Matrix<int, 3, 3> m2 = {
+        {
+            {6, 9, -46},
+            {2, 0, 5},
+            {4, 8, 1}
+        }
+    };
+
+    Matrix<int, 3, 3> m3 = m1 + m2;
+
+    EXPECT_EQ(m3[0][0], 8);
+    EXPECT_EQ(m3[0][1], 0);
+    EXPECT_EQ(m3[0][2], -32);
+    EXPECT_EQ(m3[1][0], 6);
+    EXPECT_EQ(m3[1][1], 9);
+    EXPECT_EQ(m3[1][2], -1);
+    EXPECT_EQ(m3[2][0], 4);
+    EXPECT_EQ(m3[2][1], 10);
+    EXPECT_EQ(m3[2][2], 2);
+
+    m3 = m1 - m2;
+
+    EXPECT_EQ(m3[0][0], -4);
+    EXPECT_EQ(m3[0][1], -18);
+    EXPECT_EQ(m3[0][2], 60);
+    EXPECT_EQ(m3[1][0], 2);
+    EXPECT_EQ(m3[1][1], 9);
+    EXPECT_EQ(m3[1][2], -11);
+    EXPECT_EQ(m3[2][0], -4);
+    EXPECT_EQ(m3[2][1], -6);
+    EXPECT_EQ(m3[2][2], 0);
+
+    m1 += m1 + m2 - m1;
+
+    EXPECT_EQ(m1[0][0], 8);
+    EXPECT_EQ(m1[0][1], 0);
+    EXPECT_EQ(m1[0][2], -32);
+    EXPECT_EQ(m1[1][0], 6);
+    EXPECT_EQ(m1[1][1], 9);
+    EXPECT_EQ(m1[1][2], -1);
+    EXPECT_EQ(m1[2][0], 4);
+    EXPECT_EQ(m1[2][1], 10);
+    EXPECT_EQ(m1[2][2], 2);
+
+    m2 -= m2;
+
+    EXPECT_EQ(m2[0][0], 0);
+    EXPECT_EQ(m2[0][1], 0);
+    EXPECT_EQ(m2[0][2], 0);
+    EXPECT_EQ(m2[1][0], 0);
+    EXPECT_EQ(m2[1][1], 0);
+    EXPECT_EQ(m2[1][2], 0);
+    EXPECT_EQ(m2[2][0], 0);
+    EXPECT_EQ(m2[2][1], 0);
+    EXPECT_EQ(m2[2][2], 0);
+}
+
+TEST(MatrixTest, ScalarMultiplies) {
+    Matrix<int, 3, 3> m1 = {
+        {
+            {2, -9, 14},
+            {4, 9, -6},
+            {0, 2, 1}
+        }
+    };
+
+    Matrix<int, 3, 3> m2 = 2 * m1;
+
+    EXPECT_EQ(m2[0][0], 4);
+    EXPECT_EQ(m2[0][1], -18);
+    EXPECT_EQ(m2[0][2], 28);
+    EXPECT_EQ(m2[1][0], 8);
+    EXPECT_EQ(m2[1][1], 18);
+    EXPECT_EQ(m2[1][2], -12);
+    EXPECT_EQ(m2[2][0], 0);
+    EXPECT_EQ(m2[2][1], 4);
+    EXPECT_EQ(m2[2][2], 2);
+
+    m2 *= -2;
+
+    EXPECT_EQ(m2[0][0], -8);
+    EXPECT_EQ(m2[0][1], 36);
+    EXPECT_EQ(m2[0][2], -56);
+    EXPECT_EQ(m2[1][0], -16);
+    EXPECT_EQ(m2[1][1], -36);
+    EXPECT_EQ(m2[1][2], 24);
+    EXPECT_EQ(m2[2][0], 0);
+    EXPECT_EQ(m2[2][1], -8);
+    EXPECT_EQ(m2[2][2], -4);
 }
