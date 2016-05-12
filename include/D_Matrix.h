@@ -24,10 +24,23 @@ namespace Diamond {
     namespace MatrixMath {
         /**
          Calculates the inverse of the given 2x2 matrix and stores the result in out.
-         If the given matrix is not invertible, out isn't changed.
+         Does NOT check if the matrix is invertible first; use sInv if you want more safety.
         */
         template <typename M>
         inline void inv(const M m[2][2], M out[2][2]) {
+            M inv_det = 1.0 / (m[0][0] * m[1][1] - m[0][1] * m[1][0]);
+            out[0][0] = inv_det * m[1][1];
+            out[0][1] = -inv_det * m[0][1];
+            out[1][0] = -inv_det * m[1][0];
+            out[1][1] = inv_det * m[0][0];
+        }
+
+        /**
+         Calculates the inverse of the given 2x2 matrix and stores the result in out.
+         If the given matrix is not invertible, out isn't changed.
+        */
+        template <typename M>
+        inline void sInv(const M m[2][2], M out[2][2]) {
             M inv_det = m[0][0] * m[1][1] - m[0][1] * m[1][0];
             if (inv_det != 0) {
                 inv_det = 1.0 / inv_det;
@@ -84,11 +97,21 @@ namespace Diamond {
     public:
         T m[dim1][dim2];
 
-        // Inverse
+        // Inverse functions
         // Only works if a MatrixMath::inv function exists for this matrix's dimensions.
+
+        // Does NOT check if this matrix is invertible first; use sInv if you want more safety.
         Matrix inv() const {
             Matrix inverse;
             MatrixMath::inv(m, inverse.m);
+            return inverse;
+        }
+
+        // Safer version of inv(), checks if the matrix is invertible.
+        // Returns zero matrix if not invertible.
+        Matrix sInv() const {
+            Matrix inverse = { {0} };
+            MatrixMath::sInv(m, inverse.m);
             return inverse;
         }
 

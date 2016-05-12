@@ -124,6 +124,32 @@ TEST(MatrixMathTest, Inverse) {
     EXPECT_FLOAT_EQ(m2[0][1], -4.0/24.0);
     EXPECT_FLOAT_EQ(m2[1][0], 3.0/24.0);
     EXPECT_FLOAT_EQ(m2[1][1], 2.0/24.0);
+
+    MatrixMath::sInv(m1, m2);
+
+    EXPECT_FLOAT_EQ(m2[0][0], 6.0/24.0);
+    EXPECT_FLOAT_EQ(m2[0][1], -4.0/24.0);
+    EXPECT_FLOAT_EQ(m2[1][0], 3.0/24.0);
+    EXPECT_FLOAT_EQ(m2[1][1], 2.0/24.0);
+}
+
+TEST(MatrixMathTest, SafeInverse) {
+    int m1[2][2] = {
+        {1, 1},
+        {1, 1}
+    };
+    int m2[2][2] = {
+        {9, 8},
+        {7, 6}
+    };
+
+    MatrixMath::sInv(m1, m2);
+
+    // m2 should be unmodified because m1 is not invertible
+    EXPECT_EQ(m2[0][0], 9);
+    EXPECT_EQ(m2[0][1], 8);
+    EXPECT_EQ(m2[1][0], 7);
+    EXPECT_EQ(m2[1][1], 6);
 }
 
 
@@ -316,6 +342,30 @@ TEST(MatrixTest, Inverse) {
     EXPECT_FLOAT_EQ(m2[0][1], -4.0/24.0);
     EXPECT_FLOAT_EQ(m2[1][0], 3.0/24.0);
     EXPECT_FLOAT_EQ(m2[1][1], 2.0/24.0);
+
+    m2 = m1.sInv();
+
+    EXPECT_FLOAT_EQ(m2[0][0], 6.0/24.0);
+    EXPECT_FLOAT_EQ(m2[0][1], -4.0/24.0);
+    EXPECT_FLOAT_EQ(m2[1][0], 3.0/24.0);
+    EXPECT_FLOAT_EQ(m2[1][1], 2.0/24.0);
+}
+
+TEST(MatrixTest, SafeInverse) {
+    Matrix<int, 2, 2> m1 = {
+        {
+            {1, 1},
+            {1, 1}
+        }
+    };
+
+    Matrix<int, 2, 2> m2 = m1.sInv();
+
+    // m2 should be zero matrix because m1 is not invertible
+    EXPECT_EQ(m2[0][0], 0);
+    EXPECT_EQ(m2[0][1], 0);
+    EXPECT_EQ(m2[1][0], 0);
+    EXPECT_EQ(m2[1][1], 0);
 }
 
 TEST(VectorMatrixTest, MatTimesV) {
