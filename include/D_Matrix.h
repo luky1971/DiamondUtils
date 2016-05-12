@@ -22,6 +22,22 @@
 
 namespace Diamond {
     namespace MatrixMath {
+        /**
+         Calculates the inverse of the given 2x2 matrix and stores the result in out.
+         If the given matrix is not invertible, out isn't changed.
+        */
+        template <typename M>
+        inline void inv(const M m[2][2], M out[2][2]) {
+            M inv_det = m[0][0] * m[1][1] - m[0][1] * m[1][0];
+            if (inv_det != 0) {
+                inv_det = 1.0 / inv_det;
+
+                out[0][0] = inv_det * m[1][1];
+                out[0][1] = -inv_det * m[0][1];
+                out[1][0] = -inv_det * m[1][0];
+                out[1][1] = inv_det * m[0][0];
+            }
+        }
 
         /**
          Multiplies two matrices and stores the result in out.
@@ -68,7 +84,16 @@ namespace Diamond {
     public:
         T m[dim1][dim2];
 
+        // Inverse
+        // Only works if a MatrixMath::inv function exists for this matrix's dimensions.
+        Matrix inv() const {
+            Matrix inverse;
+            MatrixMath::inv(m, inverse.m);
+            return inverse;
+        }
+
         // Matrix multiplication
+
         template <int dim3>
         Matrix<T, dim1, dim3> mul(const Matrix<T, dim2, dim3> &m2) const {
             Matrix<T, dim1, dim3> res = { 0 };

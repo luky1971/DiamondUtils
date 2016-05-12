@@ -111,6 +111,22 @@ TEST(MatrixMathTest, VTimesMat) {
     EXPECT_EQ(res, exp_res);
 }
 
+TEST(MatrixMathTest, Inverse) {
+    float m1[2][2] = {
+        {2, 4},
+        {-3, 6}
+    };
+    float m2[2][2];
+
+    MatrixMath::inv(m1, m2);
+
+    EXPECT_FLOAT_EQ(m2[0][0], 6.0/24.0);
+    EXPECT_FLOAT_EQ(m2[0][1], -4.0/24.0);
+    EXPECT_FLOAT_EQ(m2[1][0], 3.0/24.0);
+    EXPECT_FLOAT_EQ(m2[1][1], 2.0/24.0);
+}
+
+
 TEST(MatrixTest, BracketOperates) {
     Matrix<int, 2, 2> m;
     m[0][0] = 4;
@@ -283,6 +299,23 @@ TEST(MatrixTest, Multiplies) {
     EXPECT_EQ(m3[2][0], 40);
     EXPECT_EQ(m3[2][1], 38);
     EXPECT_EQ(m3[2][2], 9);
+}
+
+TEST(MatrixTest, Inverse) {
+    Matrix<float, 2, 2> m1 = {
+        {
+            {2, 4},
+            {-3, 6}
+        }
+    };
+    Matrix<float, 2, 2> m2;
+
+    m2 = m1.inv();
+
+    EXPECT_FLOAT_EQ(m2[0][0], 6.0/24.0);
+    EXPECT_FLOAT_EQ(m2[0][1], -4.0/24.0);
+    EXPECT_FLOAT_EQ(m2[1][0], 3.0/24.0);
+    EXPECT_FLOAT_EQ(m2[1][1], 2.0/24.0);
 }
 
 TEST(VectorMatrixTest, MatTimesV) {
