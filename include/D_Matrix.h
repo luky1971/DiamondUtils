@@ -22,8 +22,6 @@
 
 namespace Diamond {
     namespace MatrixMath {
-        
-
 
         /**
          Multiplies two matrices and stores the result in out.
@@ -48,12 +46,7 @@ namespace Diamond {
         */
         template <typename V, typename M>
         inline Vector2<V> mul(const Vector2<V> &v, const M m[2][2]) {
-            Vector2<V> res;
-            res.x = v.x * m[0][0];
-            res.y = v.x * m[0][1];
-            res.x += v.y * m[1][0];
-            res.y += v.y * m[1][1];
-            return res;
+            return v.mul(m);
         }
 
         /**
@@ -81,6 +74,11 @@ namespace Diamond {
             Matrix<T, dim1, dim3> res = { 0 };
             MatrixMath::mul<T, dim1, dim2, dim3>(m, m2.m, res.m);
             return res;
+        }
+
+        template <typename V>
+        Vector2<V> mul(const Vector2<V> &v) const {
+            return MatrixMath::mul(m, v);
         }
 
         // operator overloads

@@ -98,6 +98,19 @@ TEST(MatrixMathTest, Mul3by3) {
     EXPECT_EQ(out[2][2], -2368);
 }
 
+TEST(MatrixMathTest, VTimesMat) {
+    Vector2<int> v(3, 2);
+    int m[2][2] = {
+        {3, -4},
+        {1, 5}
+    };
+
+    Vector2<int> res = MatrixMath::mul(v, m);
+    Vector2<int> exp_res(11, -2);
+
+    EXPECT_EQ(res, exp_res);
+}
+
 TEST(MatrixTest, BracketOperates) {
     Matrix<int, 2, 2> m;
     m[0][0] = 4;
@@ -270,4 +283,22 @@ TEST(MatrixTest, Multiplies) {
     EXPECT_EQ(m3[2][0], 40);
     EXPECT_EQ(m3[2][1], 38);
     EXPECT_EQ(m3[2][2], 9);
+}
+
+TEST(VectorMatrixTest, MatTimesV) {
+    Matrix<int, 2, 2> m = {
+        {
+            {3, -4},
+            {1, 5}
+        }
+    };
+    Vector2<int> v(3, 2);
+
+    Vector2<int> res = MatrixMath::mul(m.m, v);
+    Vector2<int> exp_res(1, 13);
+
+    EXPECT_EQ(res, exp_res);
+
+    res = m.mul(v);
+    EXPECT_EQ(res, exp_res);
 }

@@ -68,6 +68,17 @@ namespace Diamond {
             return *this;
         }
 
+        // Matrix math
+        template <typename M>
+        Vector2<M> mul(const M m[2][2]) const {
+            Vector2<M> res;
+            res.x = x * m[0][0];
+            res.y = x * m[0][1];
+            res.x += y * m[1][0];
+            res.y += y * m[1][1];
+            return res;
+        }
+
         /**
          Rotates this vector by the given angle in radians.
         */
