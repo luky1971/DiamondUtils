@@ -217,7 +217,7 @@ TEST(MatrixTest, ScalarMultiplies) {
     EXPECT_EQ(m2[2][1], 4);
     EXPECT_EQ(m2[2][2], 2);
 
-    m2 *= -2;
+    m2 = -2 * m2;
 
     EXPECT_EQ(m2[0][0], -8);
     EXPECT_EQ(m2[0][1], 36);
@@ -228,4 +228,46 @@ TEST(MatrixTest, ScalarMultiplies) {
     EXPECT_EQ(m2[2][0], 0);
     EXPECT_EQ(m2[2][1], -8);
     EXPECT_EQ(m2[2][2], -4);
+}
+
+TEST(MatrixTest, Multiplies) {
+    Matrix<int, 3, 3> m1 = {
+        {
+            {2, -9, 14},
+            {4, 9, -6},
+            {0, 2, 1}
+        }
+    };
+
+    Matrix<int, 3, 3> m2 = {
+        {
+            {6, 9, -46},
+            {2, 0, 5},
+            {4, 8, 1}
+        }
+    };
+
+    Matrix<int, 3, 3> m3 = m1.mul(m2);
+
+    EXPECT_EQ(m3[0][0], 50);
+    EXPECT_EQ(m3[0][1], 130);
+    EXPECT_EQ(m3[0][2], -123);
+    EXPECT_EQ(m3[1][0], 18);
+    EXPECT_EQ(m3[1][1], -12);
+    EXPECT_EQ(m3[1][2], -145);
+    EXPECT_EQ(m3[2][0], 8);
+    EXPECT_EQ(m3[2][1], 8);
+    EXPECT_EQ(m3[2][2], 11);
+
+    m3 = m2.mul(m1);
+
+    EXPECT_EQ(m3[0][0], 48);
+    EXPECT_EQ(m3[0][1], -65);
+    EXPECT_EQ(m3[0][2], -16);
+    EXPECT_EQ(m3[1][0], 4);
+    EXPECT_EQ(m3[1][1], -8);
+    EXPECT_EQ(m3[1][2], 33);
+    EXPECT_EQ(m3[2][0], 40);
+    EXPECT_EQ(m3[2][1], 38);
+    EXPECT_EQ(m3[2][2], 9);
 }

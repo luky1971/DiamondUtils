@@ -129,19 +129,6 @@ namespace Diamond {
             return *this;
         }
 
-        /*
-        // Comparison operators
-        template <typename V>
-        bool operator==(const Vector2<V> &other) {
-            return x == other.x && y == other.y;
-        }
-
-        template <typename V>
-        bool operator!=(const Vector2<V> &other) {
-            return !(*this == other);
-        }
-        */
-
         // Conversion operator
         template <typename V>
         operator Vector2<V>() const {
@@ -149,12 +136,7 @@ namespace Diamond {
         }
     };
 
-    // Multiplication operators
-    template <typename V, typename S>
-    inline Vector2<V> operator*(const Vector2<V> &vec, const S scalar) {
-        return Vector2<V>(vec.x * scalar, vec.y * scalar);
-    }
-
+    // Multiplication operator
     template <typename V, typename S>
     inline Vector2<V> operator*(const S scalar, const Vector2<V> &vec) {
         return vec * scalar;
