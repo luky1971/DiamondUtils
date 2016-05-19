@@ -143,9 +143,15 @@ namespace Diamond {
     };
 
     // Multiplication operator
+
     template <typename V, typename S>
     inline Vector2<V> operator*(const S scalar, const Vector2<V> &vec) {
-        return vec * scalar;
+        return Vector2<V>(scalar * vec.x, scalar * vec.y);
+    }
+
+    template <typename V, typename S>
+    inline Vector2<V> operator*(const Vector2<V> &vec, const S scalar) {
+        return scalar * vec;
     }
 
     // Stream operator
