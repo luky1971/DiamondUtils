@@ -14,8 +14,8 @@
     limitations under the License.
 */
 
-#ifndef D_TYPEDEFS_H
-#define D_TYPEDEFS_H
+#ifndef DU_TYPEDEFS_H
+#define DU_TYPEDEFS_H
 
 #include <stdint.h>
 
@@ -43,4 +43,4 @@ namespace Diamond {
     const tD_index INVALID = ~0; // represents an invalid id or array index.
 }
 
-#endif // D_TYPEDEFS_H
+#endif // DU_TYPEDEFS_H

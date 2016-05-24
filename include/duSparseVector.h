@@ -14,11 +14,11 @@
     limitations under the License.
 */
 
-#ifndef D_SPARSEVECTOR_H
-#define D_SPARSEVECTOR_H
+#ifndef DU_SPARSEVECTOR_H
+#define DU_SPARSEVECTOR_H
 
 #include <vector>
-#include "D_typedefs.h"
+#include "duTypedefs.h"
 
 namespace Diamond {
     /**
@@ -29,7 +29,7 @@ namespace Diamond {
      leaves gaps of invalid data, and therefore should not be iterated directly.
     */
     template <class T>
-    class sparsevector {
+    class SparseVector {
     public:
 
         // Accces functions
@@ -95,4 +95,4 @@ namespace Diamond {
     };
 }
 
-#endif // D_SPARSEVECTOR_H
+#endif // DU_SPARSEVECTOR_H

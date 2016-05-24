@@ -14,7 +14,7 @@
     limitations under the License.
 */
 
-#include "D_Vector2.h"
+#include "duVector2.h"
 #include "gtest/gtest.h"
 
 using namespace Diamond;

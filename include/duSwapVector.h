@@ -14,11 +14,11 @@
     limitations under the License.
 */
 
-#ifndef D_SWAPVECTOR_H
-#define D_SWAPVECTOR_H
+#ifndef DU_SWAPVECTOR_H
+#define DU_SWAPVECTOR_H
 
 #include <vector>
-#include "D_typedefs.h"
+#include "duTypedefs.h"
 
 namespace Diamond {
     /**
@@ -28,7 +28,7 @@ namespace Diamond {
      Does not maintain order of elements, and uses O(n) auxiliary space.
     */
     template <class T>
-    class swapvector {
+    class SwapVector {
     public:
 
         // Access and iterator functions
@@ -138,4 +138,4 @@ namespace Diamond {
     };
 }
 
-#endif // D_SWAPVECTOR_H
+#endif // DU_SWAPVECTOR_H

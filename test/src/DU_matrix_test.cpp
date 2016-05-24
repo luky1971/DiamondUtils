@@ -14,7 +14,7 @@
     limitations under the License.
 */
 
-#include "D_Matrix.h"
+#include "duMatrix.h"
 #include "gtest/gtest.h"
 
 using namespace Diamond;
