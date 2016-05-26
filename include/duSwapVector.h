@@ -54,6 +54,11 @@ namespace Diamond {
          Returns an id that can be used to access the emplaced object using [] or at().
         */
         template <typename... Args>
+        tD_id emplace(Args&&... args) {
+            return emplace_back(std::forward<Args>(args)...);
+        }
+
+        template <typename... Args>
         tD_id emplace_back(Args&&... args) {
             tD_id new_id;
 
@@ -78,6 +83,8 @@ namespace Diamond {
          Adds an object to the collection.
          Returns an id that can be used to access the new object using [] or at().
         */
+        tD_id insert(const T &obj) { return push_back(obj); }
+
         tD_id push_back(const T &obj) {
             tD_id new_id;
 

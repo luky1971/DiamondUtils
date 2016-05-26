@@ -46,7 +46,7 @@ namespace Diamond {
          Returns an id that can be used to access the emplaced object using [] or at().
         */
         template <typename... Args>
-        tD_id emplace_back(Args&&... args) {
+        tD_id emplace(Args&&... args) {
             if (!free_id_stack.empty()) {
                 tD_id new_id = free_id_stack.back();
                 free_id_stack.pop_back();
@@ -64,7 +64,7 @@ namespace Diamond {
          Adds an object to the collection. 
          Returns an id that can be used to access the new object using [] or at().
         */
-        tD_id push_back(const T &obj) {
+        tD_id insert(const T &obj) {
             if (!free_id_stack.empty()) {
                 tD_id new_id = free_id_stack.back();
                 free_id_stack.pop_back();
