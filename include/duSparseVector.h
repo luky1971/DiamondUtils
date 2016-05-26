@@ -28,17 +28,17 @@ namespace Diamond {
      Unlike swapvector, maintains order of elements and uses O(1) amortized auxiliary space, but 
      leaves gaps of invalid data, and therefore should not be iterated directly.
     */
-    template <class T>
+    template <class T, typename TID = tD_id>
     class SparseVector {
     public:
 
         // Accces functions
 
-        T &operator[](tD_id id) { return objects[id]; }
-        const T &operator[](tD_id id) const { return objects[id]; }
+        T &operator[](TID id) { return objects[id]; }
+        const T &operator[](TID id) const { return objects[id]; }
 
-        T &at(tD_id id) { return objects.at(id); }
-        const T &at(tD_id id) const { return objects.at(id); }
+        T &at(TID id) { return objects.at(id); }
+        const T &at(TID id) const { return objects.at(id); }
 
 
         /**
@@ -46,9 +46,9 @@ namespace Diamond {
          Returns an id that can be used to access the emplaced object using [] or at().
         */
         template <typename... Args>
-        tD_id emplace(Args&&... args) {
+        TID emplace(Args&&... args) {
             if (!free_id_stack.empty()) {
-                tD_id new_id = free_id_stack.back();
+                TID new_id = free_id_stack.back();
                 free_id_stack.pop_back();
                 objects[new_id] = T(std::forward<Args>(args)...);
                 return new_id;
@@ -64,9 +64,9 @@ namespace Diamond {
          Adds an object to the collection. 
          Returns an id that can be used to access the new object using [] or at().
         */
-        tD_id insert(const T &obj) {
+        TID insert(const T &obj) {
             if (!free_id_stack.empty()) {
-                tD_id new_id = free_id_stack.back();
+                TID new_id = free_id_stack.back();
                 free_id_stack.pop_back();
                 objects[new_id] = obj;
                 return new_id;
@@ -81,17 +81,17 @@ namespace Diamond {
         /**
          Removes the object corresponding to the given id.
         */
-        void erase(tD_id erase_id) { free_id_stack.push_back(erase_id); }
+        void erase(TID erase_id) { free_id_stack.push_back(erase_id); }
 
 
         /**
          Returns the total number of valid and invalid elements in the vector.
         */
-        tD_index size() { return objects.size(); }
+        TID size() { return objects.size(); }
 
     private:
         std::vector<T> objects;
-        std::vector<tD_id> free_id_stack;
+        std::vector<TID> free_id_stack;
     };
 }
 
