@@ -26,7 +26,7 @@ typedef uint32_t tD_time; // time type
 typedef int32_t tD_delta; // delta time type
 
 // ID/index typedefs
-typedef uint16_t tD_index; // array index type
+typedef uint32_t tD_index; // array index type
 typedef tD_index tD_id; // general identification type
 
 namespace Diamond {
