@@ -79,6 +79,20 @@ namespace Diamond {
             }
         }
 
+        // TODO: test if rvalue reference is being forwarded properly
+        TID insert(T &&obj) {
+            if (!free_id_stack.empty()) {
+                TID new_id = free_id_stack.back();
+                free_id_stack.pop_back();
+                objects[new_id] = obj;
+                return new_id;
+            }
+            else {
+                objects.push_back(obj);
+                return objects.size() - 1;
+            }
+        }
+
 
         /**
          Removes the object corresponding to the given id.
