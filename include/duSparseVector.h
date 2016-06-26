@@ -27,6 +27,8 @@ namespace Diamond {
      Access is O(1) and faster than swapvector by a constant factor (and same as std::vector).
      Unlike swapvector, maintains order of elements and uses O(1) amortized auxiliary space, but 
      leaves gaps of invalid data, and therefore should not be iterated directly.
+     Please note that when an element is removed from a SparseVector, it is not necessarily
+     destroyed / its destructor is not necessarily called.
     */
     template <class T, typename TID = tD_id>
     class SparseVector {
