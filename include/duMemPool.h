@@ -34,54 +34,54 @@ namespace Diamond {
     class MemPool {
     public:
         MemPool(size_t chunkSize = 10, Allocator allocator = Allocator()) 
-            : data(nullptr), 
-              freeHead(nullptr),
-              chunkSize(chunkSize), 
-              allocator(allocator) {
+            : m_data(nullptr), 
+              m_freeHead(nullptr),
+              m_chunkSize(chunkSize), 
+              m_allocator(allocator) {
             
-            data = allocateChunk(chunkSize);
-            if (data)
-                initChunk(data, chunkSize);
+            m_data = allocateChunk(m_chunkSize);
+            if (m_data)
+                initChunk(m_data, m_chunkSize);
 
-            freeHead = data; // first element of free list is beginning of data chunk
+            m_freeHead = m_data; // first element of free list is beginning of data chunk
         }
 
         ~MemPool() {
             ElemType *p;
 
             // delete all memory chunks
-            while (data) {
-                p = getNextChunk(data, chunkSize);
-                allocator.deallocate(data);
-                data = p;
+            while (m_data) {
+                p = getNextChunk(m_data, m_chunkSize);
+                deallocateChunk(m_data, m_chunkSize);
+                m_data = p;
             }
         }
 
 
         template <typename... Args>
         ElemType *make(Args&&... args){
-            ElemType *ret = freeHead;
+            ElemType *ret = m_freeHead;
             
-            if (freeHead) {
+            if (m_freeHead) {
                 // If a free space was available, move the free list forward
-                freeHead = (ElemType*)*freeHead;
+                m_freeHead = (ElemType*)*m_freeHead;
             }
-            else if (data) {
+            else if (m_data) {
                 // If no more free space available, allocate a new chunk
                 // and point the last chunk to it.
-                ElemType *newChunk = allocateChunk(chunkSize);
+                ElemType *newChunk = allocateChunk(m_chunkSize);
                 if (newChunk) {
-                    (ElemType*)*(getLastChunk(data, chunkSize) + chunkSize) = newChunk;
-                    initChunk(newChunk, chunkSize);
+                    (ElemType*)*(getLastChunk(m_data, m_chunkSize) + m_chunkSize) = newChunk;
+                    initChunk(newChunk, m_chunkSize);
 
-                    freeHead = (ElemType*)*newChunk;
+                    m_freeHead = (ElemType*)*newChunk;
                 }
 
                 ret = newChunk;
             }
 
             if (ret)
-                allocator.construct(ret, std::forward<Args>(args)...);
+                m_allocator.construct(ret, std::forward<Args>(args)...);
 
             return ret;
         }
@@ -93,20 +93,24 @@ namespace Diamond {
 
                 // The current head of the free list becomes the second element,
                 // and the freed pointer becomes the new head
-                (ElemType*)*ptr = freeHead;
-                freeHead = ptr;
+                (ElemType*)*ptr = m_freeHead;
+                m_freeHead = ptr;
             }
         }
 
     private:
-        ElemType *allocateChunk(size_t size) {
-            return allocator.allocate(chunkSize + 1); // + 1 to hold pointer to next chunk
+        ElemType *allocateChunk(size_t chunkSize) {
+            return m_allocator.allocate(chunkSize + 1); // + 1 to hold pointer to next chunk
         }
 
-        void initChunk(ElemType *chunk, size_t size) {
+        void deallocateChunk(ElemType *chunk, size_t chunkSize) {
+            m_allocator.deallocate(chunk, chunkSize + 1);
+        }
+
+        void initChunk(ElemType *chunk, size_t chunkSize) {
             // point all free list elements to the next adjacent space in the chunk
             ElemType *p = chunk;
-            while (p < chunk + size) {
+            while (p < chunk + chunkSize) {
                 (ElemType*)*p = p + 1;
                 ++p;
             }
@@ -116,28 +120,28 @@ namespace Diamond {
         }
 
         // Get pointer to the next chunk in a series of chunks
-        ElemType *getNextChunk(ElemType *startChunk, size_t chSize) {
-            return *(startChunk + chSize);
+        ElemType *getNextChunk(ElemType *startChunk, size_t chunkSize) {
+            return reinterpret_cast<ElemType*>(*(startChunk + chunkSize));
         }
 
         // Get pointer to the last chunk in the given series of chunks 
-        ElemType *getLastChunk(ElemType *startChunk, size_t chSize) {
-            ElemType *ret = startChunk, n = getNextChunk(ret, chSize);
+        ElemType *getLastChunk(ElemType *startChunk, size_t chunkSize) {
+            ElemType *ret = startChunk, n = getNextChunk(ret, chunkSize);
 
             while (n) {
                 ret = n;
-                n = getNextChunk(ret, chSize);
+                n = getNextChunk(ret, chunkSize);
             }
 
             return ret;
         }
 
 
-        ElemType *data; // Pointer to first memory chunk
-        ElemType *freeHead; // Pointer to first element of free list
+        ElemType *m_data; // Pointer to first memory chunk
+        ElemType *m_freeHead; // Pointer to first element of free list
 
-        size_t chunkSize;
-        Allocator allocator;
+        size_t m_chunkSize;
+        Allocator m_allocator;
     };
 }
 
