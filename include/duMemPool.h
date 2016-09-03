@@ -32,6 +32,17 @@ namespace Diamond {
     // TODO: memory align?
     template <typename ElemType, class Allocator = std::allocator<ElemType> >
     class MemPool {
+    private:
+        
+        /**
+         Stores an element of this memory pool if the node is allocated,
+         or a pointer to the next free node if this node is free.
+        */
+        union MemNode {
+            ElemType elem;
+            MemNode *next;
+        };
+
     public:
         MemPool(size_t chunkSize = 10, Allocator allocator = Allocator()) 
             : m_data(nullptr), 
@@ -137,8 +148,8 @@ namespace Diamond {
         }
 
 
-        ElemType *m_data; // Pointer to first memory chunk
-        ElemType *m_freeHead; // Pointer to first element of free list
+        MemNode *m_data; // Pointer to first memory chunk
+        MemNode *m_freeHead; // Pointer to first element of free list
 
         size_t m_chunkSize;
         Allocator m_allocator;
