@@ -18,9 +18,22 @@
 #define DU_MEM_POOL_H
 
 #include <memory>
-#include <stdint.h>
 
 namespace Diamond {
+
+    /**
+     Linked list node that stores either an element of the
+     list or a pointer to the next element.
+    */
+    template <typename T>
+    union MemNode {
+        MemNode() : next(nullptr) {}
+
+        T elem;
+        MemNode<T> *next;
+    };
+
+
     /**
      A type-aware memory pool that allocates memory chunks of a fixed chunk size.
      
@@ -28,22 +41,12 @@ namespace Diamond {
      when it goes out of scope. It does free the memory, but the user has the responsibility
      of calling MemPool::free on every pool object that needs to be destroyed.
     */
-
     // TODO: memory align?
-    template <typename ElemType, class Allocator = std::allocator<ElemType> >
+    template <typename ElemType, class Allocator = std::allocator<MemNode<ElemType> > >
     class MemPool {
-    private:
-        
-        /**
-         Stores an element of this memory pool if the node is allocated,
-         or a pointer to the next free node if this node is free.
-        */
-        union MemNode {
-            ElemType elem;
-            MemNode *next;
-        };
-
     public:
+        using TNode = MemNode<ElemType>;
+
         MemPool(size_t chunkSize = 10, Allocator allocator = Allocator()) 
             : m_data(nullptr), 
               m_freeHead(nullptr),
@@ -58,7 +61,7 @@ namespace Diamond {
         }
 
         ~MemPool() {
-            ElemType *p;
+            TNode *p;
 
             // delete all memory chunks
             while (m_data) {
@@ -71,30 +74,33 @@ namespace Diamond {
 
         template <typename... Args>
         ElemType *make(Args&&... args){
-            ElemType *ret = m_freeHead;
+            if (!m_freeHead) // this means there was a memory error
+                return nullptr;
             
-            if (m_freeHead) {
-                // If a free space was available, move the free list forward
-                m_freeHead = (ElemType*)*m_freeHead;
-            }
-            else if (m_data) {
-                // If no more free space available, allocate a new chunk
-                // and point the last chunk to it.
-                ElemType *newChunk = allocateChunk(m_chunkSize);
-                if (newChunk) {
-                    (ElemType*)*(getLastChunk(m_data, m_chunkSize) + m_chunkSize) = newChunk;
+            if (m_freeHead->next == nullptr) {
+                // No more free space available in existing chunks, 
+                // so allocate a new chunk and point the last chunk to it.
+                TNode *newChunk = allocateChunk(m_chunkSize);
+                if (newChunk) {                    
                     initChunk(newChunk, m_chunkSize);
+                    
+                    // The last node of the previously used chunk
+                    // points to the new chunk
+                    m_freeHead->next = newChunk;
 
-                    m_freeHead = (ElemType*)*newChunk;
+                    m_freeHead = newChunk;
                 }
-
-                ret = newChunk;
+                else {
+                    return nullptr;
+                }
             }
 
-            if (ret)
-                m_allocator.construct(ret, std::forward<Args>(args)...);
+            TNode *ret = m_freeHead;
+            m_freeHead = m_freeHead->next;
 
-            return ret;
+            new (&(ret->elem)) ElemType(std::forward<Args>(args)...);
+
+            return &(ret->elem);
         }
 
 
@@ -104,52 +110,41 @@ namespace Diamond {
 
                 // The current head of the free list becomes the second element,
                 // and the freed pointer becomes the new head
-                (ElemType*)*ptr = m_freeHead;
-                m_freeHead = ptr;
+                TNode *freed = new (ptr) TNode();
+                freed->next = m_freeHead;
+                m_freeHead = freed;
             }
         }
 
-    private:
-        ElemType *allocateChunk(size_t chunkSize) {
+    protected:
+        TNode *allocateChunk(size_t chunkSize) {
             return m_allocator.allocate(chunkSize + 1); // + 1 to hold pointer to next chunk
         }
 
-        void deallocateChunk(ElemType *chunk, size_t chunkSize) {
+        void deallocateChunk(TNode *chunk, size_t chunkSize) {
             m_allocator.deallocate(chunk, chunkSize + 1);
         }
 
-        void initChunk(ElemType *chunk, size_t chunkSize) {
+        void initChunk(TNode *chunk, size_t chunkSize) {
             // point all free list elements to the next adjacent space in the chunk
-            ElemType *p = chunk;
+            TNode *p = chunk;
             while (p < chunk + chunkSize) {
-                (ElemType*)*p = p + 1;
+                p->next = p + 1;
                 ++p;
             }
 
             // the last element does not have a next
-            (ElemType*)*p = nullptr;
+            p->next = nullptr;
         }
 
         // Get pointer to the next chunk in a series of chunks
-        ElemType *getNextChunk(ElemType *startChunk, size_t chunkSize) {
-            return reinterpret_cast<ElemType*>(*(startChunk + chunkSize));
-        }
-
-        // Get pointer to the last chunk in the given series of chunks 
-        ElemType *getLastChunk(ElemType *startChunk, size_t chunkSize) {
-            ElemType *ret = startChunk, n = getNextChunk(ret, chunkSize);
-
-            while (n) {
-                ret = n;
-                n = getNextChunk(ret, chunkSize);
-            }
-
-            return ret;
+        TNode *getNextChunk(TNode *startChunk, size_t chunkSize) {
+            return (startChunk + chunkSize)->next;
         }
 
 
-        MemNode *m_data; // Pointer to first memory chunk
-        MemNode *m_freeHead; // Pointer to first element of free list
+        TNode *m_data; // Pointer to first memory chunk
+        TNode *m_freeHead; // Pointer to first element of free list
 
         size_t m_chunkSize;
         Allocator m_allocator;
