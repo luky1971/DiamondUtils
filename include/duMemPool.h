@@ -47,7 +47,8 @@ namespace Diamond {
     public:
         using TNode = MemNode<ElemType>;
 
-        MemPool(size_t chunkSize = 10, Allocator allocator = Allocator()) 
+        MemPool(size_t chunkSize = 10, 
+                Allocator allocator = Allocator()) 
             : m_data(nullptr), 
               m_freeHead(nullptr),
               m_chunkSize(chunkSize), 
@@ -73,7 +74,7 @@ namespace Diamond {
 
 
         template <typename... Args>
-        ElemType *make(Args&&... args){
+        ElemType *make(Args&&... args) {
             if (!m_freeHead) // this means there was a memory error
                 return nullptr;
             
@@ -138,7 +139,7 @@ namespace Diamond {
         }
 
         // Get pointer to the next chunk in a series of chunks
-        TNode *getNextChunk(TNode *startChunk, size_t chunkSize) {
+        TNode *getNextChunk(TNode *startChunk, size_t chunkSize) const {
             return (startChunk + chunkSize)->next;
         }
 
