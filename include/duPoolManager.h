@@ -45,8 +45,7 @@ namespace Diamond {
     */
     template <typename ElemType, 
               class PtrType, 
-              class Allocator = std::allocator<MemNode<ElemType> >, 
-              class Deleter = PoolDeleter<MemPool<ElemType, Allocator>, ElemType> >
+              class Allocator = std::allocator<MemNode<ElemType> > >
     class PoolManager {
     public:
         PoolManager(size_t chunkSize = 10, 
@@ -64,7 +63,7 @@ namespace Diamond {
 
     protected:
         MemPool<ElemType, Allocator> m_pool;
-        Deleter m_deleter;
+        PoolDeleter<MemPool<ElemType, Allocator>, ElemType> m_deleter;
     };
 }
 
