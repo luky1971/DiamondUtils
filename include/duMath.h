@@ -33,6 +33,10 @@ namespace Diamond {
 
         inline float deg2rad(float deg) { return deg * DEG2RAD; }
 
+        inline int random(int min, int max) {
+            return min + (std::rand() % (max - min + 1));
+        }
+
         inline float random(float min, float max) {
             return min + ((float)std::rand() / RAND_MAX) * (max - min);
         }
