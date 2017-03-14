@@ -28,6 +28,10 @@ namespace Diamond {
     template <typename T, class Deleter = std::default_delete<T> >
     class DumbPtr {
     public:
+        DumbPtr() : ptr(nullptr) {}
+
+        DumbPtr(std::nullptr_t p) : ptr(p) {}
+
         DumbPtr(T *ptr, Deleter d = Deleter()) : ptr(ptr), d(d) {}
 
         T *get() const { return ptr; }
