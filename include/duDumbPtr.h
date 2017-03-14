@@ -76,6 +76,61 @@ namespace Diamond {
     bool operator>=(const DumbPtr<T,TD> &a, const DumbPtr<U,UD> &b) {
         return a.get() >= b.get();
     }
+
+
+    template <typename T, typename TD>
+    bool operator==(const DumbPtr<T,TD> &a, std::nullptr_t b) {
+        return a.get() == b;
+    }
+    template <typename T, typename TD>
+    bool operator==(std::nullptr_t a, const DumbPtr<T,TD> &b) {
+        return a == b.get();
+    }
+
+    template <typename T, typename TD>
+    bool operator!=(const DumbPtr<T,TD> &a, std::nullptr_t b) {
+        return a.get() != b;
+    }
+    template <typename T, typename TD>
+    bool operator!=(std::nullptr_t a, const DumbPtr<T,TD> &b) {
+        return a != b.get();
+    }
+
+    template <typename T, typename TD>
+    bool operator<(const DumbPtr<T,TD> &a, std::nullptr_t b) {
+        return a.get() < b;
+    }
+    template <typename T, typename TD>
+    bool operator<(std::nullptr_t a, const DumbPtr<T,TD> &b) {
+        return a < b.get();
+    }
+
+    template <typename T, typename TD>
+    bool operator>(const DumbPtr<T,TD> &a, std::nullptr_t b) {
+        return a.get() > b;
+    }
+    template <typename T, typename TD>
+    bool operator>(std::nullptr_t a, const DumbPtr<T,TD> &b) {
+        return a > b.get();
+    }
+
+    template <typename T, typename TD>
+    bool operator<=(const DumbPtr<T,TD> &a, std::nullptr_t b) {
+        return a.get() <= b;
+    }
+    template <typename T, typename TD>
+    bool operator<=(std::nullptr_t a, const DumbPtr<T,TD> &b) {
+        return a <= b.get();
+    }
+
+    template <typename T, typename TD>
+    bool operator>=(const DumbPtr<T,TD> &a, std::nullptr_t b) {
+        return a.get() >= b;
+    }
+    template <typename T, typename TD>
+    bool operator>=(std::nullptr_t a, const DumbPtr<T,TD> &b) {
+        return a >= b.get();
+    }
 }
 
 #endif // D_DUMB_PTR_H
