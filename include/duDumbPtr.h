@@ -36,6 +36,9 @@ namespace Diamond {
 
         T *get() const { return ptr; }
 
+        Deleter &get_deleter() { return d; }
+        const Deleter &get_deleter() const { return d; }
+
         T &operator*() const { return *ptr; }
 
         T *operator->() const { return ptr; }
@@ -48,6 +51,28 @@ namespace Diamond {
         T *ptr;
         Deleter d;
     };
+
+    // Casting
+
+    template <typename T, typename TD, typename U, typename UD>
+    DumbPtr<T, TD> static_pointer_cast(const DumbPtr<U, UD> &ptr) noexcept {
+        return DumbPtr<T, TD>(static_cast<T*>(ptr.get()), ptr.get_deleter);
+    }
+
+    template <typename T, typename TD, typename U, typename UD>
+    DumbPtr<T, TD> dynamic_pointer_cast(const DumbPtr<U, UD> &ptr) noexcept {
+        return DumbPtr<T, TD>(dynamic_cast<T*>(ptr.get()), ptr.get_deleter);
+    }
+
+    template <typename T, typename TD, typename U, typename UD>
+    DumbPtr<T, TD> const_pointer_cast(const DumbPtr<U, UD> &ptr) noexcept {
+        return DumbPtr<T, TD>(const_cast<T*>(ptr.get()), ptr.get_deleter);
+    }
+
+    template <typename T, typename TD, typename U, typename UD>
+    DumbPtr<T, TD> reinterpret_pointer_cast(const DumbPtr<U, UD> &ptr) noexcept {
+        return DumbPtr<T, TD>(reinterpret_cast<T*>(ptr.get()), ptr.get_deleter);
+    }
 
     // Comparison operators
 
