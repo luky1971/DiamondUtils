@@ -32,6 +32,19 @@ private:
     bool *deleted;
 };
 
+class DumbSubDeleter : public DumbDeleter {
+public:
+    DumbSubDeleter(bool *deleted) : deleted(deleted) {}
+
+    void free(void *ptr) const override {
+        delete (int*)ptr;
+        *deleted = true;
+    }
+
+private:
+    bool *deleted;
+};
+
 TEST(DumbPtrTest, Dereferences) {
     DumbPtr<int> p(new int(5));
 
@@ -64,7 +77,8 @@ TEST(DumbPtrTest, StructDereferences) {
 
 TEST(DumbPtrTest, Frees) {
     bool deleted = false;
-    DumbPtr<int, Deleter> p(new int(1), Deleter(&deleted));
+    DumbSubDeleter deleter(&deleted);
+    DumbPtr<int> p(new int(1), &deleter);
 
     EXPECT_FALSE(deleted);
     EXPECT_TRUE(p);
@@ -105,4 +119,16 @@ TEST(DumbPtrTest, Compares) {
 
     p1.free();
     p3.free();
+}
+
+TEST(DumbPtrTest, Converts) {
+    DumbPtr<int> a = nullptr;
+    EXPECT_FALSE(a);
+
+    DumbPtr<int> b(new int(1));
+    int *bp = b;
+    EXPECT_EQ(*bp, 1);
+
+    DumbPtr<int> c = bp;
+    EXPECT_EQ(b, c);
 }
